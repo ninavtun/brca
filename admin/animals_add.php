@@ -163,15 +163,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
+<?php $pageTitle = 'Add Animal';
+$active = 'admin';
+require '../includes/header.php'; ?>
+<div class="panel">
 
-<head>
-    <meta charset="utf-8">
-    <title>Add Animal - BRCA Admin</title>
-</head>
-
-<body>
     <p><a href="dashboard.php">&larr; Dashboard</a> | <a href="animals.php">All animals</a></p>
     <h1>Add New Animal</h1>
     <p>The animal ID is generated automatically when you save.</p>
@@ -257,6 +253,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit">Save Animal</button>
     </form>
-</body>
-
-</html>
+</div>
+<?php require '../includes/footer.php'; ?>
