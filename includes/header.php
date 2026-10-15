@@ -18,7 +18,7 @@ $isAdmin   = ($_SESSION['role'] ?? '') === 'admin';
 
 $nav = [
     'home'          => ['Home',          'index.php'],
-    'adopt'         => ['Adopt',         'animals.php'],
+    'adopt'         => ['Adopt',         'adopt.php'],
     'volunteer'     => ['Volunteer',     'volunteer.php'],
     'donate'        => ['Donate',        'donate.php'],
     'announcements' => ['Announcements', 'announcements.php'],
