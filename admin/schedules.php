@@ -31,12 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_schedule'])) {
     }
 }
 
-// Handle Delete Schedule
+// Handle Delete Schedule safely by deleting linked applications first
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
-    $conn->query("DELETE FROM volunteer_schedules WHERE schedule_id = $id");
-    header('Location: schedules.php');
-    exit;
+    
+    // Delete dependent volunteer applications first to satisfy foreign key constraints
+    $conn->query("DELETE FROM volunteer_applications WHERE schedule_id = $id");
+    
+    // Now delete the schedule
+    if ($conn->query("DELETE FROM volunteer_schedules WHERE schedule_id = $id")) {
+        header('Location: schedules.php');
+        exit;
+    } else {
+        $error = "Error deleting schedule.";
+    }
 }
 
 // Fetch all schedules
@@ -118,7 +126,7 @@ require '../includes/header.php';
                                     <td><span class="badge" style="background: #e6f4ea; color: #137333; padding: 4px 10px; border-radius: 20px;"><?= $sched['slots_available'] ?> slots</span></td>
                                     <td><?= e($sched['status']) ?></td>
                                     <td>
-                                        <a href="schedules.php?delete=<?= $sched['schedule_id'] ?>" onclick="return confirm('Are you sure you want to delete this schedule?');" style="color: #e53e3e; font-weight: 600; text-decoration: none;">Delete</a>
+                                        <a href="schedules.php?delete=<?= $sched['schedule_id'] ?>" onclick="return confirm('Are you sure you want to delete this schedule? This will also remove any linked applications.');" style="color: #e53e3e; font-weight: 600; text-decoration: none;">Delete</a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

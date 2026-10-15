@@ -2,30 +2,6 @@
 require_once 'config/db.php';
 require_once 'includes/functions.php';
 
-$message = '';
-$error = '';
-
-// Handle volunteer application submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['schedule_id'])) {
-    if (empty($_SESSION['user_id'])) {
-        header('Location: login.php?next=volunteer.php');
-        exit;
-    }
-
-    $user_id = $_SESSION['user_id'];
-    $sched_id = intval($_POST['schedule_id']);
-    
-    // Insert into adoption_foster_apps with type 'Volunteer'
-    $stmt = $conn->prepare("INSERT INTO adoption_foster_apps (user_id, application_type, status, application_date) VALUES (?, 'Volunteer', 'Pending', NOW())");
-    $stmt->bind_param("i", $user_id);
-    
-    if ($stmt->execute()) {
-        $message = "Your volunteer application has been submitted successfully!";
-    } else {
-        $error = "Failed to submit application. Please try again.";
-    }
-}
-
 // Fetch live schedules from volunteer_schedules table
 $schedules_query = "SELECT * FROM volunteer_schedules WHERE volunteer_date >= CURDATE() ORDER BY volunteer_date ASC";
 $schedules_result = $conn->query($schedules_query);
@@ -38,14 +14,6 @@ require 'includes/header.php';
 <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
     <h2>Volunteer With Us</h2>
     <p style="color: var(--muted); margin-bottom: 30px;">Help us care for rescued cats and dogs.</p>
-
-    <?php if ($message): ?>
-        <div style="background: #e6f4ea; color: #137333; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; font-weight: 600;"><?= $message ?></div>
-    <?php endif; ?>
-
-    <?php if ($error): ?>
-        <div style="background: #fce8e6; color: #c5221f; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; font-weight: 600;"><?= $error ?></div>
-    <?php endif; ?>
 
     <h3 style="margin-bottom: 20px; color: var(--navy);">Available Schedules</h3>
 
@@ -64,7 +32,8 @@ require 'includes/header.php';
                             <?= $sched['slots_available'] ?> slots left
                         </div>
                     </div>
-                    <form method="POST">
+                    <!-- Directs to the application form page via GET -->
+                    <form action="volunteer_apply.php" method="GET">
                         <input type="hidden" name="schedule_id" value="<?= $sched['schedule_id'] ?>">
                         <button type="submit" class="btn" style="width: 100%; background: var(--teal, #2a9d8f); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer;">Apply</button>
                     </form>

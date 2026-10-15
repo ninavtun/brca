@@ -19,11 +19,11 @@ $user = $stmt->get_result()->fetch_assoc();
 // Get user's adoption/foster applications safely
 $apps = [];
 $stmt = $conn->prepare("
-    SELECT a.app_id, a.type, a.status, a.created_at, an.name AS animal_name 
+    SELECT a.application_id AS app_id, a.application_type AS type, a.status, a.application_date AS created_at, an.name AS animal_name, an.animal_id 
     FROM adoption_foster_apps a
     LEFT JOIN animals an ON a.animal_id = an.animal_id
     WHERE a.user_id = ?
-    ORDER BY a.created_at DESC
+    ORDER BY a.application_date DESC
 ");
 if ($stmt) {
     $stmt->bind_param("i", $userId);
@@ -34,9 +34,15 @@ if ($stmt) {
     }
 }
 
-// Get user's volunteer applications safely
+// Get user's volunteer applications from volunteer_applications table
 $volApps = [];
-$stmt = $conn->prepare("SELECT vol_app_id, status, created_at FROM volunteer_applications WHERE user_id = ? ORDER BY created_at DESC");
+$stmt = $conn->prepare("
+    SELECT va.volunteer_application_id AS vol_app_id, va.status, va.application_date AS created_at, vs.volunteer_date, vs.start_time, vs.end_time 
+    FROM volunteer_applications va
+    LEFT JOIN volunteer_schedules vs ON va.schedule_id = vs.schedule_id
+    WHERE va.user_id = ? 
+    ORDER BY va.application_date DESC
+");
 if ($stmt) {
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -89,7 +95,7 @@ require 'includes/header.php';
                                 <tr>
                                     <td>#<?= e($a['app_id']) ?></td>
                                     <td><?= e(ucfirst($a['type'])) ?></td>
-                                    <td><?= e($a['animal_name'] ?: 'General') ?></td>
+                                    <td><?= e($a['animal_name'] ? $a['animal_name'] . ' • BRCA-0' . $a['animal_id'] : 'General') ?></td>
                                     <td><?= date('M d, Y', strtotime($a['created_at'])) ?></td>
                                     <td><span class="badge <?= statusClass($a['status']) ?>"><?= e(ucfirst($a['status'])) ?></span></td>
                                 </tr>
@@ -110,6 +116,7 @@ require 'includes/header.php';
                         <thead>
                             <tr>
                                 <th>App ID</th>
+                                <th>Schedule</th>
                                 <th>Submitted</th>
                                 <th>Status</th>
                             </tr>
@@ -118,6 +125,7 @@ require 'includes/header.php';
                             <?php foreach ($volApps as $v): ?>
                                 <tr>
                                     <td>#<?= e($v['vol_app_id']) ?></td>
+                                    <td><?= e(date('d M Y', strtotime($v['volunteer_date'])) . ' (' . $v['start_time'] . ')') ?></td>
                                     <td><?= date('M d, Y', strtotime($v['created_at'])) ?></td>
                                     <td><span class="badge <?= statusClass($v['status']) ?>"><?= e(ucfirst($v['status'])) ?></span></td>
                                 </tr>
