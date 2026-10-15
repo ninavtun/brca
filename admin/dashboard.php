@@ -25,6 +25,8 @@ require '../includes/header.php';
         <a href="animals.php">Manage Animals</a>
         <a href="animals_add.php">Add New Animal</a>
         <a href="kennels.php">Kennels</a>
+        <a href="applications.php">Applications</a>
+        <a href="schedules.php">Schedules</a>
         <a href="../account.php">Back to User Account</a>
         <a href="../logout.php" class="logout">Log Out</a>
     </aside>
@@ -40,6 +42,7 @@ require '../includes/header.php';
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
                 <a href="animals_add.php" class="btn btn-auto">Add Animal Record</a>
                 <a href="animals.php" class="btn btn-auto btn-outline">View All Animals</a>
+                <a href="applications.php" class="btn btn-auto" style="background: var(--teal, #2a9d8f); color: #fff; text-decoration: none;">Manage Applications</a>
             </div>
         </div>
     </section>
