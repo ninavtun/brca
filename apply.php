@@ -1,11 +1,16 @@
 <?php
 require_once 'config/db.php';
 require_once 'includes/functions.php';
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> main
 // Ensure session is started to track the logged-in user
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+<<<<<<< HEAD
  
 $target_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
 $app_type = isset($_GET['type']) ? $_GET['type'] : 'Adopt';
@@ -14,6 +19,16 @@ $app_type = isset($_GET['type']) ? $_GET['type'] : 'Adopt';
 $query = "SELECT * FROM animals";
 $result = mysqli_query($conn, $query);
  
+=======
+
+$target_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
+$app_type = isset($_GET['type']) ? $_GET['type'] : 'Adopt';
+
+// Safe query to fetch the animal matching the ID
+$query = "SELECT * FROM animals";
+$result = mysqli_query($conn, $query);
+
+>>>>>>> main
 $animal = null;
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -28,7 +43,11 @@ if ($result && mysqli_num_rows($result) > 0) {
         $animal = mysqli_fetch_assoc($result);
     }
 }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> main
 if (!$animal) {
     $animal = [
         'name' => 'Luna',
@@ -37,10 +56,17 @@ if (!$animal) {
         'photo' => 'default.jpg'
     ];
 }
+<<<<<<< HEAD
  
 $animal_id = $animal['animal_id'] ?? $animal['id'] ?? $target_id;
 $success_message = '';
  
+=======
+
+$animal_id = $animal['animal_id'] ?? $animal['id'] ?? $target_id;
+$success_message = '';
+
+>>>>>>> main
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
@@ -49,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $address = mysqli_real_escape_string($conn, $_POST['address']);
     $info = mysqli_real_escape_string($conn, $_POST['info']);
+<<<<<<< HEAD
     // Capitalize type to match ENUM('Adopt','Foster') in your SQL
     $application_type = ucfirst(strtolower(mysqli_real_escape_string($conn, $_POST['application_type'])));
  
@@ -59,6 +86,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     $insert_query = "INSERT INTO adoption_foster_apps (user_id, animal_id, application_type, additional_info, status, application_date) 
                      VALUES ('$user_id', '$animal_id', '$application_type', '$additional_info', 'Pending', NOW())";
+=======
+    
+    // Capitalize type to match ENUM('Adopt','Foster') in your SQL
+    $application_type = ucfirst(strtolower(mysqli_real_escape_string($conn, $_POST['application_type'])));
+
+    // Use the active session user_id so it links directly to your account (fallback to 1 if not logged in)
+    $user_id = $_SESSION['user_id'] ?? 1; 
+    
+    // Package applicant details into additional_info since the table expects it
+    $additional_info = "Applicant: $first_name $last_name | Contact: $contact | Email: $email | Address: $address | Notes: $info";
+
+    $insert_query = "INSERT INTO adoption_foster_apps (user_id, animal_id, application_type, additional_info, status, application_date) 
+                     VALUES ('$user_id', '$animal_id', '$application_type', '$additional_info', 'Pending', NOW())";
+    
+>>>>>>> main
     if (mysqli_query($conn, $insert_query)) {
         $success_message = "Your application has been successfully submitted! The admin team will review it shortly.";
     } else {
@@ -66,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<<<<<<< HEAD
  
 <!DOCTYPE html>
 <html lang="en">
@@ -75,6 +118,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Adoption / Foster Application</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
+=======
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoption / Foster Application</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+>>>>>>> main
         .apply-page {
             max-width: 750px;
             margin: 40px auto;
@@ -201,6 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 20px;
         }
         .back-link:hover { text-decoration: underline; }
+<<<<<<< HEAD
 </style>
 </head>
 <body>
@@ -282,5 +337,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     <?php include 'includes/footer.php'; ?>
  
+=======
+    </style>
+</head>
+<body>
+
+    <?php include 'includes/header.php'; ?>
+
+    <main class="apply-page">
+        <a href="animal_profile.php?id=<?php echo $target_id; ?>" class="back-link">&lsaquo; Back to Animal Profile</a>
+
+        <div class="apply-card">
+            <h2>Adoption / Foster Application</h2>
+
+            <?php if (!empty($success_message)): ?>
+                <div class="alert-success">
+                    <?php echo $success_message; ?>
+                    <br><br>
+                    <a href="adopt.php" style="color: var(--teal); text-decoration: underline;">Browse more animals</a>
+                </div>
+            <?php else: ?>
+
+                <!-- Selected Animal Preview Box -->
+                <div class="selected-animal-box">
+                    <img src="uploads/<?php echo htmlspecialchars($animal['photo'] ?? 'default.jpg'); ?>" alt="">
+                    <div class="selected-animal-info" style="flex: 1;">
+                        <h4><?php echo htmlspecialchars($animal['name'] ?? 'Rescue Pet'); ?></h4>
+                        <p><?php echo htmlspecialchars($animal['species'] ?? 'Animal'); ?> &bull; <?php echo htmlspecialchars($animal['estimated_age'] ?? 'N/A'); ?></p>
+                    </div>
+                </div>
+
+                <form action="apply.php?id=<?php echo $target_id; ?>&type=<?php echo strtolower($app_type); ?>" method="POST">
+                    
+                    <label style="margin-bottom: 8px;">I would like to</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="application_type" value="Adopt" <?php echo (strcasecmp($app_type, 'Adopt') === 0) ? 'checked' : ''; ?>> Adopt
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="application_type" value="Foster" <?php echo (strcasecmp($app_type, 'Foster') === 0) ? 'checked' : ''; ?>> Foster
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">First name</label>
+                            <input type="text" id="first_name" name="first_name" required placeholder="First name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last name</label>
+                            <input type="text" id="last_name" name="last_name" required placeholder="Last name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact">Contact number</label>
+                            <input type="text" id="contact" name="contact" required placeholder="Contact number">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" required placeholder="Address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="info">Additional information</label>
+                        <textarea id="info" name="info" placeholder="Tell us about your home and experience with pets"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Submit Application</button>
+                </form>
+
+            <?php endif; ?>
+        </div>
+    </main>
+
+    <?php include 'includes/footer.php'; ?>
+
+>>>>>>> main
 </body>
 </html>

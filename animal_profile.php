@@ -4,24 +4,40 @@ require_once 'includes/functions.php';
 
 $target_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
 
+<<<<<<< HEAD
+=======
+// Fetch all animals and find the matching one in PHP to avoid column name mismatches entirely
+>>>>>>> main
 $query = "SELECT * FROM animals";
 $result = mysqli_query($conn, $query);
 
 $animal = null;
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
+<<<<<<< HEAD
+=======
+        // Check standard possible primary key fields dynamically
+>>>>>>> main
         $current_id = $row['id'] ?? $row['animal_id'] ?? $row['pet_id'] ?? reset($row);
         if ($current_id == $target_id) {
             $animal = $row;
             break;
         }
     }
+<<<<<<< HEAD
+=======
+    // If not found by ID, default to the first record
+>>>>>>> main
     if (!$animal) {
         mysqli_data_seek($result, 0);
         $animal = mysqli_fetch_assoc($result);
     }
 }
 
+<<<<<<< HEAD
+=======
+// Fallback if table is empty
+>>>>>>> main
 if (!$animal) {
     $animal = [
         'name' => 'Luna',
@@ -40,6 +56,10 @@ if (!$animal) {
 
 $resolved_id = $animal['id'] ?? $animal['animal_id'] ?? $animal['pet_id'] ?? $target_id;
 ?>
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -191,6 +211,7 @@ $resolved_id = $animal['id'] ?? $animal['animal_id'] ?? $animal['pet_id'] ?? $ta
     </style>
 </head>
 <body>
+<<<<<<< HEAD
     <?php include 'includes/header.php'; ?>
     <main class="profile-page">
         <a href="adopt.php" class="back-link">&lsaquo; Back to Available Animals</a>
@@ -200,10 +221,32 @@ $resolved_id = $animal['id'] ?? $animal['animal_id'] ?? $animal['pet_id'] ?? $ta
             </div>
             <div class="profile-details">
                 <h1><?php echo htmlspecialchars($animal['name'] ?? 'Rescue Pet'); ?></h1>
+=======
+
+    <?php include 'includes/header.php'; ?>
+
+    <main class="profile-page">
+        <a href="adopt.php" class="back-link">&lsaquo; Back to Available Animals</a>
+
+        <div class="profile-container">
+            <!-- Animal Photo -->
+            <div class="profile-img-wrap">
+                <img src="uploads/<?php echo htmlspecialchars($animal['image'] ?? 'default.jpg'); ?>" alt="<?php echo htmlspecialchars($animal['name'] ?? 'Pet'); ?>">
+            </div>
+
+            <!-- Details & Action Buttons -->
+            <div class="profile-details">
+                <h1><?php echo htmlspecialchars($animal['name'] ?? 'Rescue Pet'); ?></h1>
+                
+>>>>>>> main
                 <div class="badges">
                     <span class="badge-id"><?php echo htmlspecialchars($animal['code'] ?? 'BRCA-0000'); ?></span>
                     <span class="badge-status"><?php echo htmlspecialchars($animal['status'] ?? 'Available'); ?></span>
                 </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
                 <table class="info-table">
                     <tr>
                         <th>Species</th>
@@ -230,17 +273,32 @@ $resolved_id = $animal['id'] ?? $animal['animal_id'] ?? $animal['pet_id'] ?? $ta
                         <td><?php echo htmlspecialchars($animal['intake_date'] ?? 'N/A'); ?></td>
                     </tr>
                 </table>
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
                 <div class="action-buttons">
                     <a href="apply.php?id=<?php echo $resolved_id; ?>&type=adopt" class="btn-adopt">Apply to Adopt</a>
                     <a href="apply.php?id=<?php echo $resolved_id; ?>&type=foster" class="btn-foster">Apply to Foster</a>
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
+=======
+
+        <!-- About Section -->
+>>>>>>> main
         <div class="bio-section">
             <h3>About <?php echo htmlspecialchars($animal['name'] ?? 'this pet'); ?></h3>
             <p><?php echo htmlspecialchars($animal['bio'] ?? 'No additional details provided yet.'); ?></p>
         </div>
     </main>
+<<<<<<< HEAD
     <?php include 'includes/footer.php'; ?>
+=======
+
+    <?php include 'includes/footer.php'; ?>
+
+>>>>>>> main
 </body>
 </html>

@@ -33,10 +33,16 @@ if ($stmt) {
         $apps[] = $row;
     }
 }
- 
-// Get user's volunteer applications safely (using correct column alias matching your SQL schema)
+
+// Get user's volunteer applications from volunteer_applications table
 $volApps = [];
-$stmt = $conn->prepare("SELECT volunteer_application_id AS vol_app_id, status, application_date AS created_at FROM volunteer_applications WHERE user_id = ? ORDER BY application_date DESC");
+$stmt = $conn->prepare("
+    SELECT va.volunteer_application_id AS vol_app_id, va.status, va.application_date AS created_at, vs.volunteer_date, vs.start_time, vs.end_time 
+    FROM volunteer_applications va
+    LEFT JOIN volunteer_schedules vs ON va.schedule_id = vs.schedule_id
+    WHERE va.user_id = ? 
+    ORDER BY va.application_date DESC
+");
 if ($stmt) {
     $stmt->bind_param("i", $userId);
     $stmt->execute();
