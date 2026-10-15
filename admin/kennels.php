@@ -108,11 +108,15 @@ require '../includes/header.php';
 ?>
 
 <div class="account">
+    <!-- Updated Admin Sidebar -->
     <aside class="side-menu" aria-label="Admin Menu">
         <a href="dashboard.php">Dashboard Overview</a>
         <a href="animals.php">Manage Animals</a>
         <a href="animals_add.php">Add New Animal</a>
         <a href="kennels.php" class="is-active">Kennels</a>
+        <a href="applications.php">Applications</a>
+        <a href="schedules.php">Schedules</a>
+	<a href="donation.php">Donation Settings</a>
         <a href="../account.php">Back to User Account</a>
         <a href="../logout.php" class="logout">Log Out</a>
     </aside>

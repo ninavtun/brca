@@ -63,6 +63,7 @@ require '../includes/header.php';
         <a href="kennels.php">Kennels</a>
         <a href="applications.php">Applications</a>
         <a href="schedules.php" class="is-active">Schedules</a>
+	<a href="donation.php">Donation Settings</a>
         <a href="../account.php">Back to User Account</a>
         <a href="../logout.php" class="logout">Log Out</a>
     </aside>
