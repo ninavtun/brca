@@ -49,3 +49,28 @@ function statusClass($status)
     if ($s === 'rejected') return 'badge-red';
     return 'badge-amber';
 }
+
+
+// ---- Announcements ----
+function announcementTypes()
+{
+    return ['Rescue Update', 'Event', 'Urgent Need', 'Donation Drive'];
+}
+
+function announcementBadge($type)
+{
+    switch ($type) {
+        case 'Urgent Need':    return 'badge-red';
+        case 'Event':          return 'badge-blue';
+        case 'Donation Drive': return 'badge-green';
+        default:               return 'badge-amber';
+    }
+}
+
+// Shortens long text for preview cards
+function excerpt($text, $max = 150)
+{
+    $text = trim(preg_replace('/\s+/', ' ', (string)$text));
+    if (mb_strlen($text) <= $max) return $text;
+    return rtrim(mb_substr($text, 0, $max)) . '...';
+}

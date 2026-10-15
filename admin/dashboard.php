@@ -25,6 +25,7 @@ require '../includes/header.php';
         <a href="animals.php">Manage Animals</a>
         <a href="animals_add.php">Add New Animal</a>
         <a href="kennels.php">Kennels</a>
+        <a href="announcements.php">Announcements</a>
         <a href="../account.php">Back to User Account</a>
         <a href="../logout.php" class="logout">Log Out</a>
     </aside>

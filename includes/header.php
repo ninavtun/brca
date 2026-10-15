@@ -1,8 +1,4 @@
 <?php
-// Set these BEFORE including this file (all optional):
-//   $pageTitle  - text for the browser tab
-//   $active     - which nav link to highlight: home, adopt, volunteer, donate, announcements, about, admin, account
-//   $base       - path back to the project root: '' for root pages, '../' for pages in /admin
 require_once __DIR__ . '/functions.php';
 
 // Automatically detect if we are in a subfolder like /admin/ if $base isn't set manually
@@ -18,7 +14,7 @@ $isAdmin   = ($_SESSION['role'] ?? '') === 'admin';
 
 $nav = [
     'home'          => ['Home',          'index.php'],
-    'adopt'         => ['Adopt',         'animals.php'],
+    'adopt'         => ['Adopt',         'adopt.php'],
     'volunteer'     => ['Volunteer',     'volunteer.php'],
     'donate'        => ['Donate',        'donate.php'],
     'announcements' => ['Announcements', 'announcements.php'],
@@ -32,14 +28,24 @@ $nav = [
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($pageTitle) ?> - Bahrain Rescue Centre for Animals</title>
-    <link rel="stylesheet" href="<?= e($base) ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= e($base) ?>assets/css/style.css?v=<?= @filemtime(__DIR__ . '/../assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= e($base) ?>assets/css/announcements.css?v=<?= @filemtime(__DIR__ . '/../assets/css/announcements.css') ?>">
+    <link rel="icon" type="image/png" href="<?= e($base) ?>assets/img/logo.png">
 </head>
 
 <body>
+    <!-- Global Audio Element for Site SFX -->
+    <audio id="global-pop-sfx" src="<?= e($base) ?>assets/sfx/pop.mp3" preload="auto"></audio>
+    <audio id="global-click-sfx" src="<?= e($base) ?>assets/sfx/click.mp3" preload="auto"></audio>
     <header class="topbar">
         <div class="topbar-inner">
-            <a class="brand" href="<?= e($base) ?>index.php"><span aria-hidden="true">&#128062;</span> BRCA</a>
-            <nav class="nav" aria-label="Main">
+            <a class="brand" href="<?= e($base) ?>index.php" style="display:flex;align-items:center;"><img src="<?= e($base) ?>assets/img/logo.png" alt="BRCA - Bahrain Rescue Centre for Animals" height="48" style="height:48px;width:auto;display:block;"></a>
+
+            <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="nav" id="main-nav" aria-label="Main">
                 <?php foreach ($nav as $key => [$label, $href]): ?>
                     <a href="<?= e($base . $href) ?>" class="<?= $active === $key ? 'is-active' : '' ?>"><?= e($label) ?></a>
                 <?php endforeach; ?>
@@ -54,4 +60,68 @@ $nav = [
             </nav>
         </div>
     </header>
+    <script>
+        // Opens and closes the menu on small screens
+        (function () {
+            var btn = document.querySelector('.nav-toggle');
+            var nav = document.getElementById('main-nav');
+            btn.addEventListener('click', function () {
+                var open = nav.classList.toggle('is-open');
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            });
+        })();
+
+        // Global SFX handler for hover (pop) and clicks (click) with link delay prevention
+        document.addEventListener('DOMContentLoaded', function () {
+            var popSfx = document.getElementById('global-pop-sfx');
+            var clickSfx = document.getElementById('global-click-sfx');
+
+            function playPopSFX() {
+                if (popSfx) {
+                    popSfx.currentTime = 0;
+                    popSfx.play().catch(function(e) {
+                        // Suppress browser autoplay restrictions
+                    });
+                }
+            }
+
+            function playClickSFX() {
+                if (clickSfx) {
+                    clickSfx.currentTime = 0;
+                    clickSfx.play().catch(function(e) {
+                        // Suppress browser autoplay restrictions
+                    });
+                }
+            }
+
+            // Play pop SFX on hovering over interactive elements
+            document.querySelectorAll('a, button, .animal-card, .animal-profile-card').forEach(function(el) {
+                el.addEventListener('mouseenter', playPopSFX);
+            });
+
+            // Intercept clicks site-wide and use the click SFX
+            document.addEventListener('click', function (e) {
+                playClickSFX();
+
+                var target = e.target.closest('a');
+                
+                // If it's an internal link that changes pages, delay navigation slightly so the sound plays
+                if (target && target.href && !target.getAttribute('target') && target.hostname === window.location.hostname) {
+                    var href = target.getAttribute('href');
+                    if (href && (href.startsWith('#') || href.startsWith('javascript:'))) {
+                        return; // Ignore page anchors or javascript links
+                    }
+
+                    e.preventDefault(); // Temporarily hold off navigation
+                    var destination = target.href;
+
+                    // Play the sound, then navigate after 120ms
+                    setTimeout(function () {
+                        window.location.href = destination;
+                    }, 120);
+                }
+            });
+        });
+    </script>
     <main class="page">

@@ -15,10 +15,11 @@ $loggedIn = !empty($_SESSION['user_id']);
         Dedicated to rescuing, rehabilitating, and rehoming animals in need across Bahrain. Join our mission today by adopting, fostering, or volunteering.
     </p>
     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="adopt.php" class="btn btn-auto">Adopt a Pet</a>
         <?php if ($loggedIn): ?>
-            <a href="account.php" class="btn btn-auto">Go to My Account</a>
+            <a href="account.php" class="btn btn-auto btn-outline">Go to My Account</a>
         <?php else: ?>
-            <a href="login.php" class="btn btn-auto">Log In</a>
+            <a href="login.php" class="btn btn-auto btn-outline">Log In</a>
             <a href="register.php" class="btn btn-auto btn-outline">Register Account</a>
         <?php endif; ?>
     </div>

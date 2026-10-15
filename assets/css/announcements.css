@@ -1,0 +1,58 @@
+/* ---------- Logo ---------- */
+.brand { display: flex; align-items: center; }
+.brand img { height: 44px; width: auto; display: block; }
+
+/* ---------- Extra badge, small buttons, admin helpers ---------- */
+.badge-blue { background: #e3eefb; color: #2b6cb0; }
+.btn-sm { padding: 6px 12px; margin-top: 0; width: auto; font-size: .85rem; }
+.btn-danger { background: var(--red); }
+.btn-danger:hover { background: #9b2c2c; }
+.inline-form { display: inline; margin: 0; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 12px 0 4px; }
+.filters input, .filters select { width: auto; min-width: 180px; }
+.filters .btn { margin-top: 0; width: auto; }
+.thumb { width: 56px; height: 40px; object-fit: cover; border-radius: 6px; background: var(--bg); display: block; }
+.actions { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+.preview-img { max-width: 220px; border-radius: 8px; display: block; margin: 8px 0; }
+.check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.check input { width: auto; }
+
+/* ---------- Announcements (public) ---------- */
+.lead { color: var(--muted); margin: 4px 0 0; }
+
+/* Filter bar */
+.ann-filter { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 22px 0 26px; }
+.ann-filter label { margin: 0; }
+.ann-filter select { width: auto; min-width: 230px; }
+.ann-count { margin-left: auto; color: var(--muted); font-size: .9rem; }
+
+/* Cards: the top stripe color follows the announcement type */
+.tone-amber { --tone: #e0a526; }
+.tone-blue  { --tone: #4a90d9; }
+.tone-red   { --tone: #c53030; }
+.tone-green { --tone: #38a169; }
+.ann-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.ann-card { background: var(--card); border: 1.5px solid var(--line); border-top: 5px solid var(--tone, var(--line)); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.ann-media { display: block; height: 180px; }
+.ann-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ann-text { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.ann-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: .84rem; color: var(--muted); }
+.ann-text h2 { margin: 0; font-size: 1.15rem; }
+.ann-text h2 a { color: var(--navy); text-decoration: none; }
+.ann-text h2 a:hover { text-decoration: underline; }
+.ann-text p { margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.ann-text .more { margin-top: auto; padding-top: 4px; text-decoration: none; font-weight: 700; }
+.ann-text .more:hover { text-decoration: underline; }
+
+/* Pagination */
+.pager { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
+.pager a, .pager span { min-width: 38px; padding: 6px 12px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; text-align: center; text-decoration: none; }
+.pager span.is-active { background: var(--teal); border-color: var(--teal); color: #fff; font-weight: 700; }
+
+/* Detail page */
+.ann-detail { max-width: 760px; margin: 0 auto; background: var(--card); border: 1.5px solid var(--line); border-top: 5px solid var(--tone, var(--line)); border-radius: 12px; overflow: hidden; }
+.ann-detail > img { width: 100%; max-height: 380px; object-fit: cover; display: block; }
+.ann-content { padding: 24px 28px 30px; }
+.ann-content .ann-meta { justify-content: flex-start; gap: 12px; }
+.ann-content h1 { margin: 12px 0 14px; }
+.ann-content p { max-width: 70ch; }
