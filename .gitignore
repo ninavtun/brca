@@ -1,2 +1,5 @@
 uploads/*
 !uploads/.gitkeep
+!uploads/*.jpg
+!uploads/*.png
+!uploads/*.webp
