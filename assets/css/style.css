@@ -95,3 +95,4 @@ table.list td { padding: 11px 12px; border-bottom: 1px solid var(--line); }
 @media (prefers-reduced-motion: no-preference) {
     .btn, .nav a { transition: background .15s, color .15s; }
 }
+

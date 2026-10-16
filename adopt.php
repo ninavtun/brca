@@ -2,7 +2,7 @@
 require_once 'config/db.php';
 require_once 'includes/functions.php';
 
-$query = "SELECT * FROM animals";
+$query = "SELECT * FROM animals ORDER BY animal_id DESC";
 $result = mysqli_query($conn, $query);
 ?>
 
@@ -71,11 +71,11 @@ $result = mysqli_query($conn, $query);
         }
 
         /* --- Still Frame (Normal state when NOT hovering) --- */
-	.still-frame {
-   	    top: -210px;     
+        .still-frame {
+            top: -210px;     
             bottom: -210px;  
             height: calc(100% + 48px);
-}
+        }
 
         /* Hover Top Frame (Cats pop higher on hover) */
         .hover-top {
@@ -131,18 +131,30 @@ $result = mysqli_query($conn, $query);
             <?php if ($result && mysqli_num_rows($result) > 0): ?>
                 <?php while ($animal = mysqli_fetch_assoc($result)): ?>
                     <?php 
-                        $animal_id_val = $animal['id'] ?? $animal['animal_id'] ?? 1;
+                        $aid = (int)($animal['animal_id'] ?? 1);
                         $animal_name = $animal['name'] ?? 'Rescue Pet';
                         $animal_species = $animal['species'] ?? 'Animal';
-                        $animal_age = $animal['age'] ?? 'N/A';
-                        $animal_code = $animal['code'] ?? 'BRCA-0000';
+                        $animal_age = $animal['estimated_age'] ?? ($animal['age'] ?? 'N/A');
+                        $animal_code = animalCode($aid);
                         $animal_status = $animal['status'] ?? 'Available';
-                        $animal_image = $animal['image'] ?? 'default.jpg';
+
+                        // Check for animal photo using ID and common extensions
+                        $photoPath = '';
+                        foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+                            if (file_exists('assets/img/animals/' . $aid . '.' . $ext)) {
+                                $photoPath = 'assets/img/animals/' . $aid . '.' . $ext;
+                                break;
+                            }
+                        }
                     ?>
                     <div class="animal-card">
                         <div class="animal-profile-card">
                             <div class="animal-photo-container">
-                                <img src="uploads/<?php echo htmlspecialchars($animal_image); ?>" alt="<?php echo htmlspecialchars($animal_name); ?>" class="animal-photo">
+                                <?php if ($photoPath): ?>
+                                    <img src="<?php echo htmlspecialchars($photoPath); ?>" alt="<?php echo htmlspecialchars($animal_name); ?>" class="animal-photo">
+                                <?php else: ?>
+                                    <div class="animal-photo" style="display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #94a3b8;">🐾</div>
+                                <?php endif; ?>
                             </div>
                             <img src="assets/img/still_frame.png" alt="" class="frame still-frame">
                             <img src="assets/img/hover_PF_T.png" alt="" class="frame hover-top">
@@ -156,7 +168,7 @@ $result = mysqli_query($conn, $query);
                                 <span class="badge-id"><?php echo htmlspecialchars($animal_code); ?></span>
                                 <span class="badge-status"><?php echo htmlspecialchars($animal_status); ?></span>
                             </div>
-                            <a href="animal_profile.php?id=<?php echo $animal_id_val; ?>" class="btn-details">View Details</a>
+                            <a href="animal_profile.php?id=<?php echo $aid; ?>" class="btn-details">View Details</a>
                         </div>
                     </div>
                 <?php endwhile; ?>

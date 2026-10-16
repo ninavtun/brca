@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("i", $current['assignment_id']);
             $stmt->execute();
         }
-        $stmt = $conn->prepare("INSERT INTO kennel_assignments (animal_id, kennel_id, moved_by) VALUES (?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO kennel_assignments (animal_id, kennel_id, moved_by, date_in) VALUES (?, ?, ?, NOW())");
         $stmt->bind_param("iii", $animalId, $newKennel, $adminId);
         $stmt->execute();
 
@@ -61,12 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ---- Data for the page ----
+// ---- Data for the page (filtered to exclude nameless/empty rows) ----
 $kennels = $conn->query(
     "SELECT k.kennel_id, k.kennel_name, k.section, k.capacity,
             COUNT(ka.assignment_id) AS occupied
      FROM kennels k
      LEFT JOIN kennel_assignments ka ON ka.kennel_id = k.kennel_id AND ka.date_out IS NULL
+     WHERE k.kennel_name IS NOT NULL AND k.kennel_name != ''
      GROUP BY k.kennel_id ORDER BY k.kennel_id"
 )->fetch_all(MYSQLI_ASSOC);
 
@@ -114,8 +115,11 @@ require '../includes/header.php';
         <a href="animals.php">Manage Animals</a>
         <a href="animals_add.php">Add New Animal</a>
         <a href="kennels.php" class="is-active">Kennels</a>
+        <a href="announcements.php">Announcements</a>
         <a href="applications.php">Applications</a>
         <a href="schedules.php">Schedules</a>
+	<a href="home_settings.php">Home Page Settings</a>
+	<a href="about_settings.php">About Page Settings</a>
 	<a href="donation.php">Donation Settings</a>
         <a href="../account.php">Back to User Account</a>
         <a href="../logout.php" class="logout">Log Out</a>

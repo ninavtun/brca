@@ -17,12 +17,12 @@ $loggedIn  = !empty($_SESSION['user_id']);
 $isAdmin   = ($_SESSION['role'] ?? '') === 'admin';
 
 $nav = [
-    'home'          => ['Home',          'index.php'],
-    'adopt'         => ['Adopt',         'adopt.php'],
-    'volunteer'     => ['Volunteer',     'volunteer.php'],
-    'donate'        => ['Donate',        'donate.php'],
+    'home'          => ['Home',         'index.php'],
+    'adopt'         => ['Adopt',        'adopt.php'],
+    'volunteer'     => ['Volunteer',    'volunteer.php'],
+    'donate'        => ['Donate',       'donate.php'],
     'announcements' => ['Announcements', 'announcements.php'],
-    'about'         => ['About',         'about.php'],
+    'about'         => ['About',        'about.php'],
 ];
 ?>
 <!DOCTYPE html>
@@ -31,15 +31,20 @@ $nav = [
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($pageTitle) ?> - Bahrain Rescue Centre for Animals</title>
+    <title><?= e($pageTitle) ?></title>
     <link rel="stylesheet" href="<?= e($base) ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= e($base) ?>assets/css/announcements.css">
+    <link rel="icon" type="image/png" href="<?= e($base) ?>assets/img/logo.png">
 </head>
 
 <body>
     <header class="topbar">
         <div class="topbar-inner">
-            <a class="brand" href="<?= e($base) ?>index.php"><span aria-hidden="true">&#128062;</span> BRCA</a>
-            <nav class="nav" aria-label="Main">
+            <a class="brand" href="<?= e($base) ?>index.php" style="display:flex;align-items:center;">
+                <img src="<?= e($base) ?>assets/img/logo.png" alt="BRCA - Bahrain Rescue Centre for Animals" height="48" style="height:48px;width:auto;display:block;">
+            </a>
+
+            <nav class="nav" id="main-nav" aria-label="Main">
                 <?php foreach ($nav as $key => [$label, $href]): ?>
                     <a href="<?= e($base . $href) ?>" class="<?= $active === $key ? 'is-active' : '' ?>"><?= e($label) ?></a>
                 <?php endforeach; ?>
